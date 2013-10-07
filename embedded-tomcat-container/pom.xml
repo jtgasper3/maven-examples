@@ -53,8 +53,8 @@
 			</plugin>
 <!--Tomcat Embedded server, tested, works and used to replicate production environment
 	To run the app locally:
-		1) call mvn tomcat:run-war -P {profile}
-		2) browse to http://localhost:5310/soar
+		1) call mvn tomcat:run-war
+		2) browse to http://localhost:5310/path
 		3) CTRL+C on Maven to close down server.
 -->
 			<plugin>
