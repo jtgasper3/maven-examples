@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.example</groupId>
+	<artifactId>webapp</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+
+	<properties>
+		<project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>US-ASCII</project.reporting.outputEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-compiler-plugin</artifactId>
+		        	<version>2.3.2</version>
+			        <configuration>
+					<source>1.6</source>
+				        <target>1.6</target>
+		        	</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warName>webapp</warName>
+				</configuration>
+			</plugin>
+			<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-failsafe-plugin</artifactId>
+			        <version>2.9</version>
+			        <executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+			        	<execution>
+						<id>verify</id>
+						<goals>
+							<!-- set the goal to "verify" if you want the test to fail the build.
+							     set the goal to "integration-test", if you want the build to suceed even if the test fail.-->
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+<!--Tomcat Embedded server, tested, works and used to replicate production environment
+	To run the app locally:
+		1) call mvn tomcat:run-war -P {profile}
+		2) browse to http://localhost:5310/soar
+		3) CTRL+C on Maven to close down server.
+-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+			        <configuration>
+					<port>5319</port>
+					<httpsPort>5310</httpsPort>
+					<path>/path</path>
+					<keystoreFile>../../.keystore</keystoreFile>
+					<keystorePass>changeit</keystorePass>
+					<systemProperties>
+						<server.property>alpha</server.property>
+					</systemProperties>
+			        </configuration>
+				<executions>
+					<execution>
+						<id>start-tomcat</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run-war</goal>
+						</goals>
+            					<configuration>
+							<fork>true</fork>
+						</configuration>
+					</execution>
+          				<execution>
+						<id>stop-tomcat</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>shutdown</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.example</groupId>
+			<artifactId>existingwar.webapp</artifactId>
+			<version>1.0</version>
+			<scope>runtime</scope>
+                        <type>war</type>
+		</dependency>
+	</dependencies>
+</project>
