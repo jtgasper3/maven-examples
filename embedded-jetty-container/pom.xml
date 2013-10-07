@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.example</groupId>
+	<artifactId>webapp</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+
+	<properties>
+		<project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>US-ASCII</project.reporting.outputEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-compiler-plugin</artifactId>
+		        	<version>2.3.2</version>
+			        <configuration>
+					<source>1.6</source>
+				        <target>1.6</target>
+		        	</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warName>webapp</warName>
+				</configuration>
+			</plugin>
+			<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-failsafe-plugin</artifactId>
+			        <version>2.9</version>
+			        <executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+			        	<execution>
+						<id>verify</id>
+						<goals>
+							<!-- set the goal to "verify" if you want the test to fail the build.
+							     set the goal to "integration-test", if you want the build to suceed even if the test fail.-->
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+<!-Jetty Embedded server, tested, works and used to replicate production environment
+	To run the app locally:
+		1) call mvn jetty:run
+		2) browse to http://localhost:5310/path
+		3) CTRL+C on Maven to close down server.
+
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.16</version>
+
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<stopPort>8005</stopPort>
+					<stopKey>STOP</stopKey>
+					<contextPath>soar</contextPath>
+					<webAppConfig>
+						<extraClasspath>${basedir}/dbdriver.jar</extraClasspath>
+					</webAppConfig>	
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>5310</port>
+						</connector>
+					</connectors>
+					<requestLog implementation="org.mortbay.jetty.NCSARequestLog">
+						<filename>${basedir}/target/yyyy_mm_dd.request.log</filename>
+						<retainDays>90</retainDays>
+						<append>true</append>
+						<extended>false</extended>
+						<logTimeZone>GMT</logTimeZone>
+					</requestLog>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run-exploded</goal>
+						</goals>
+            					<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+						</configuration>
+					</execution>
+          				<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.example</groupId>
+			<artifactId>existingwar.webapp</artifactId>
+			<version>1.0</version>
+			<scope>runtime</scope>
+                        <type>war</type>
+		</dependency>
+	</dependencies>
+</project>
